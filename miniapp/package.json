@@ -1,0 +1,37 @@
+{
+  "name": "miniapp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/node": "^22.13.5",
+    "@types/request": "^2.48.12",
+    "firebase": "^11.4.0",
+    "flutter": "^0.0.5",
+    "fs": "^0.0.1-security",
+    "node-red-contrib-telegrambot": "^16.2.0",
+    "node-telegram-bot-api": "^0.63.0",
+    "react": "^19.0.0",
+    "react-firebase-hooks": "^5.1.1",
+    "socket.io": "^4.8.1",
+    "vite-plugin-fs": "^1.1.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.7",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.2.0",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vite-plugin-vue-devtools": "^7.7.2"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.9",
+    "utf-8-validate": "^6.0.5"
+  }
+}
