@@ -7,13 +7,14 @@
         <form @submit.prevent="register">
           <div class="form-group">
             <h3>Приветствуем!</h3>
-            <p>Имя, под которым вас<br>будут видеть другие<br> пользователи,</p>
-            <label for="name">введите сюда:</label>
-            <input type="text" v-model="name" required />
+            <label for="email">введите электронную почту:</label>
+            <input type="email" v-model="mail" required />
+            <label for="name">введите пароль:</label>
+            <input type="password" v-model="password" required />
           </div>
           <button type="submit">Войти</button>
         </form>
-        <img src="https://i.imgur.com/M1WCjw3.png" width="50%" style="position: relative; left:122px; top: 24px;">
+        <img src="https://i.imgur.com/M1WCjw3.png" width="50%" style="position: relative; left:122px; top: 2W4px;">
       </div>
     </div>
   </template>
@@ -23,43 +24,43 @@
   <script>
 
 import router from "@/router";
-import firebase from "firebase/compat/app";
-import "firebase/compat/database";
-var firebaseConfig = {
-    // ...
-    // The value of `databaseURL` depends on the location of the database
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+
+
+const firebaseConfig = {
     databaseURL: "https://miniapp-dc095-default-rtdb.firebaseio.com/",
   };
  
-firebase.initializeApp(firebaseConfig)
+const app  = initializeApp(firebaseConfig)
+const auth = getAuth(app);
 
 
-
-  export default {            
+  export default {            /* хуй !!!!!!!!!!!!!!!!!!!!!!!*/
     name: 'Signup',
-    data() {
+    data() {                    /* Игорь тот ещё овош*/
       return {
-        name: '',
+        email: '',
+        password: ''
       };
     },
     methods: {
       register() {
-        if (this.name) {  
+        if (this.mail & this.password) {  
             console.log();
 
-              console.log('Регистрация успешна', { name: this.name });
+              console.log('Регистрация успешна', { name: this.mail });
+              auth.createUserWithEmailAndPassword(this.email, this.password);
+
+
               router.push('/profile')
-              const newRef = firebase.database().ref('Users').push();
-              const uniquKey = newRef.key;
-              newRef.set({
-                  username: "asdassads"
-                  })
+             
           this.resetForm();
           router.push('/profile')
            }
        },
       resetForm() {
-        this.name = '';
+        this.mail = '';
       },
     }
   };
