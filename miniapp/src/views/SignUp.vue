@@ -24,7 +24,8 @@
   <script>
 
 import router from "@/router";
-
+import firebase from "firebase/compat/app";
+import "firebase/compat/database";
 const firebaseConfig = {
     databaseURL: "https://miniapp-dc095-default-rtdb.firebaseio.com/",
   };
