@@ -24,16 +24,13 @@
   <script>
 
 import router from "@/router";
-import { getAuth } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-
 
 const firebaseConfig = {
     databaseURL: "https://miniapp-dc095-default-rtdb.firebaseio.com/",
   };
  
-const app  = initializeApp(firebaseConfig)
-const auth = getAuth(app);
+firebase.initializeApp(firebaseConfig)
+
 
 
   export default {            /* хуй !!!!!!!!!!!!!!!!!!!!!!!*/
