@@ -12,3 +12,4 @@ if (window.Telegram?.WebApp) {
 app.use(router)
 
 app.mount('#app')
+

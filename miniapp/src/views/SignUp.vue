@@ -7,9 +7,9 @@
         <form @submit.prevent="register">
           <div class="form-group">
             <h3>Приветствуем!</h3>
-            <label for="email">введите электронную почту:</label>
+            <label for="mail">введите электронную почту:</label>
             <input type="email" v-model="mail" required />
-            <label for="name">введите пароль:</label>
+            <label for="password">введите пароль:</label>
             <input type="password" v-model="password" required />
           </div>
           <button type="submit">Войти</button>
@@ -25,7 +25,7 @@
 
 import router from "@/router";
 import "firebase/compat/database";
-
+import {signUp} from '@/firebase.js'
 
 
 
@@ -33,23 +33,27 @@ import "firebase/compat/database";
     name: 'Signup',
     data() {                    /* Игорь тот ещё овош*/
       return {
-        email: '',
-        password: ''
+        mail: '',
+        password: '',
+
       };
     },
     methods: {
       register() {
-        if (this.mail & this.password) {  
+        if (this.mail) {  
             console.log();
 
-              console.log('Регистрация успешна', { name: this.mail });
-              
+              console.log('Регистрация успешна', {name: this.mail });
+              signUp(this.mail, this.password)    
 
 
               router.push('/profile')
              
           this.resetForm();
           router.push('/profile')
+
+
+
            }
        },
       resetForm() {

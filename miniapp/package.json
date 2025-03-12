@@ -11,6 +11,7 @@
   "dependencies": {
     "@types/node": "^22.13.5",
     "@types/request": "^2.48.12",
+    "curl": "^0.1.4",
     "firebase": "^11.4.0",
     "flutter": "^0.0.5",
     "fs": "^0.0.1-security",

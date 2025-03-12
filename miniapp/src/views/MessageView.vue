@@ -36,12 +36,6 @@ import router from "@/router";
 import firebase from "firebase/compat/app";
 import "firebase/compat/database";
 
-var firebaseConfig = {
-    databaseURL: "https://miniapp-dc095-default-rtdb.firebaseio.com/",
-};
-
-firebase.initializeApp(firebaseConfig);
-
 export default {
     name: 'MessageView',
     data() {
