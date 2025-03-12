@@ -24,13 +24,8 @@
   <script>
 
 import router from "@/router";
-import firebase from "firebase/compat/app";
 import "firebase/compat/database";
-const firebaseConfig = {
-    databaseURL: "https://miniapp-dc095-default-rtdb.firebaseio.com/",
-  };
- 
-firebase.initializeApp(firebaseConfig)
+
 
 
 
@@ -48,7 +43,7 @@ firebase.initializeApp(firebaseConfig)
             console.log();
 
               console.log('Регистрация успешна', { name: this.mail });
-              auth.createUserWithEmailAndPassword(this.email, this.password);
+              
 
 
               router.push('/profile')
