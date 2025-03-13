@@ -8,14 +8,14 @@
         <div class="messages-list">
             <div   
                 v-for="(message, index) in messages"
-                :key="message.id"
+                :key="index"
                 class="message-item"
             >
                 <div v-if="shouldShowUsername(index)" class="message-username">
-                    {{ message.username }}
+                    {{ message.name }}
                 </div>
                 <div class="message-text">
-                    {{ message.title }}
+                    {{ message.currentUser }}
                 </div>
             </div>
         </div>
@@ -33,8 +33,7 @@
 
 <script>
 import router from "@/router";
-import firebase from "firebase/compat/app";
-import "firebase/compat/database";
+import { writeMessage, listenForMessages } from "@/firebase1";
 
 export default {
     name: 'MessageView',
@@ -42,22 +41,21 @@ export default {
         return {
             messages: [],
             name: "",
-            currentUser: "Вы", 
+            currentUser: "penis", 
         };
     },
     
     methods: {
-        register() {
+        async register() {
             if (this.name) {
-                const newRef = firebase.database().ref('Messages').push();
                 const newMessage = {
-                    title: this.name,
-                    username: this.currentUser 
+                    name: this.currentUser,
+                    currentUser: this.name,
                 };
-                
-                newRef.set(newMessage).then(() => {
-                    this.resetForm();
-                });
+
+                await writeMessage(newMessage); 
+
+                this.resetForm();
             }
         },
         
@@ -70,35 +68,18 @@ export default {
         },
 
         newchat() {
-            const newRef = firebase.database().ref('Chats').push();
-            const uniqueKey = newRef.key;
-            newRef.set({
-                username: uniqueKey
-            });
-            firebase.database().ref('Users').remove('Users' + uniqueKey);
+            this.messages = []; 
         },
-        
-
-        listener() {
-            const dbRef = firebase.database().ref('Messages');
-            dbRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                this.messages = [];
-                for (const id in data) {
-                    this.messages.push({ id, ...data[id] });
-                }
-            });
-        },
-
 
         shouldShowUsername(index) {
-            return index === 0 || this.messages[index].username !== this.messages[index - 1].username;
+            return index === 0 || this.messages[index].name !== this.messages[index - 1].name;
         }
     },
 
-
     mounted() {
-        this.listener();
+        listenForMessages((messages) => {
+            this.messages = messages;
+        });
     }
 };
 </script>

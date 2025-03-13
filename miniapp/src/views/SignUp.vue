@@ -25,7 +25,7 @@
 
 import router from "@/router";
 import "firebase/compat/database";
-import {signUp} from '@/firebase.js'
+import {signIn, signUp} from '@/firebase1.js'
 
 
 
@@ -44,8 +44,9 @@ import {signUp} from '@/firebase.js'
             console.log();
 
               console.log('Регистрация успешна', {name: this.mail });
-              signUp(this.mail, this.password)    
-
+              signUp(this.mail, this.password)
+              signIn(this.mail, this.password)    
+              
 
               router.push('/profile')
              

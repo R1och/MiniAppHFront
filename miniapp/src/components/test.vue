@@ -9,7 +9,7 @@
   <script>
   import { ref, onMounted, onBeforeUnmount } from 'vue';
   import { ref as dbRef, onValue } from 'firebase/database';
-  import { database } from '../firebase'; // путь к вашему файлу firebase.js
+  import { database } from '../firebase1'; // путь к вашему файлу firebase.js
   
   export default {
     setup() {
