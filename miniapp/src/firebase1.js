@@ -1,10 +1,8 @@
       // Import the functions you need from the SDKs you need
       import { initializeApp } from "firebase/app";
       import { getAnalytics } from "firebase/analytics";
-      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-      import { getDatabase, push, ref, set, onValue } from "firebase/database";
-      import { title } from "process";
-
+      import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+      import { getDatabase, push, ref, set, onValue, get } from "firebase/database";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,32 +21,47 @@
       // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app)
-      const analytics = getAnalytics(app);
       const database = getDatabase(app);
-      const user = auth.currentUser;
+      export async function signUp(email, password) {
 
-      export function signUp(email, password) {
-
-          createUserWithEmailAndPassword(auth, email, password)
-      }
-
-      export function signIn(email, password) {
-
-          signInWithEmailAndPassword(auth, email, password)
-          if (user !== null) {
-              const uid = user.uid;
-              console.log(uid)
+          try {
+              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+              const user = userCredential.user;
+              console.log("Пользователь зарегистрирован:", user.uid);
+          } catch (error) {
+              console.error("Ошибка при регистрации:", error.message);
           }
       }
 
+      export function signIn() {}
 
-      export const writeMessage = async(message) => {
-          const messageRef = ref(database, 'Messages'); // Определяем путь с сообщениями
+      export function createChat(chatName) {
+          const Ref = ref(database, 'Chats/' + chatName);
+          get(Ref).then((snapshot) => {
+              if (!snapshot.exists()) {
+                  set(Ref, { status: "Isachat" })
+                      .then(() => {
+                          console.log(`Чат "${chatName}" успешно создан.`);
+                      })
+                      .catch((error) => {
+                          console.error("Ошибка при создании чата:", error);
+                      });
+              } else {
+                  console.log(`Чат "${chatName}" уже существует.`);
+              }
+          }).catch((error) => {
+              console.error("Ошибка при проверке существования чата:", error);
+          });
+      }
+
+
+      export const writeMessage = async(message, chatNameMessage) => {
+          const messageRef = ref(database, 'Chats/' + chatNameMessage + '/Messages'); // Определяем путь с сообщениями
           await push(messageRef, message); // Добавляем новое сообщение
       };
 
-      export const listenForMessages = (callback) => {
-          const messageRef = ref(database, 'Messages');
+      export const listenForMessages = (callback, chatNameMessages) => {
+          const messageRef = ref(database, 'Chats/' + chatNameMessages + '/Messages');
           onValue(messageRef, (snapshot) => {
               const messages = [];
               snapshot.forEach((childSnapshot) => {
@@ -57,3 +70,13 @@
               callback(messages);
           });
       };
+
+
+      export function userData() {
+          const user = auth.currentUser;
+          if (user) {
+              return user.uid;
+
+          }
+
+      }

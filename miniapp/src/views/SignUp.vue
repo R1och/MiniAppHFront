@@ -41,12 +41,8 @@ import {signIn, signUp} from '@/firebase1.js'
     methods: {
       register() {
         if (this.mail) {  
-            console.log();
-
               console.log('Регистрация успешна', {name: this.mail });
               signUp(this.mail, this.password)
-              signIn(this.mail, this.password)    
-              
 
               router.push('/profile')
              

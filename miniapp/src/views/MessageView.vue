@@ -12,10 +12,10 @@
                 class="message-item"
             >
                 <div v-if="shouldShowUsername(index)" class="message-username">
-                    {{ message.name }}
+                    {{ message.currentUser }}
                 </div>
                 <div class="message-text">
-                    {{ message.currentUser }}
+                    {{ message.name }}
                 </div>
             </div>
         </div>
@@ -24,16 +24,16 @@
         <input class="input" type="text" v-model="name" placeholder="Введите сообщение" required />
         <button class="button" type="submit">отправить</button>
     </form>
-    <div class="NCB">
-        <form @submit.prevent="newchat">
-            <button type="submit">новый чат</button>
-        </form>
-    </div>
+
+    <form @submit.prevent="newСhat">
+        <input class="input1" type="text" v-model="chat" placeholder="Введите название чата" required />
+        <button class="button1" type="submit">новый чат</button>
+    </form>
 </template>
 
 <script>
 import router from "@/router";
-import { writeMessage, listenForMessages } from "@/firebase1";
+import { writeMessage, listenForMessages, createChat, userData } from "@/firebase1";
 
 export default {
     name: 'MessageView',
@@ -41,34 +41,48 @@ export default {
         return {
             messages: [],
             name: "",
-            currentUser: "penis", 
+            currentUser: "penis",
+            chat: "",
+            sumbitChat: "",
         };
     },
     
     methods: {
         async register() {
+            this.currentUser = userData();
             if (this.name) {
                 const newMessage = {
-                    name: this.currentUser,
-                    currentUser: this.name,
+                    name: this.name,
+                    currentUser: this.currentUser,
                 };
 
-                await writeMessage(newMessage); 
+                await writeMessage(newMessage, this.sumbitChat); 
 
                 this.resetForm();
             }
         },
-        
+        newСhat() {
+            if (this.chat) {
+                createChat(this.chat);
+                this.sumbitChat = this.chat;
+                this.resetChat();
+                listenForMessages((messages) => {
+                    this.messages = messages;
+                }, this.sumbitChat);
+            }
+
+        },
+
+
         resetForm() {
             this.name = '';
         },
+        resetChat() {
+            this.chat = '';
+        },       
 
         backprof() {
             router.push('/profile');
-        },
-
-        newchat() {
-            this.messages = []; 
         },
 
         shouldShowUsername(index) {
@@ -79,7 +93,7 @@ export default {
     mounted() {
         listenForMessages((messages) => {
             this.messages = messages;
-        });
+        }, this.sumbitChat);
     }
 };
 </script>
@@ -122,8 +136,25 @@ export default {
     line-height: 26px;
     letter-spacing: 10%;
 }
+.input1 {
+    position: top;
+    bottom: 40px;
+    width: 80%;
+    border-radius: 6px;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(119, 119, 119);
+    color: rgb(0, 0, 0);
+    font-weight: 500;
+    line-height: 26px;
+    letter-spacing: 10%;
+}
 .button {
     position: absolute;
+    right: 10px;
+    bottom: 40px;
+}
+.button1 {
+    position: top;
     right: 10px;
     bottom: 40px;
 }
