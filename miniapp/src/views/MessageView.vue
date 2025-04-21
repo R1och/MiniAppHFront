@@ -82,7 +82,7 @@ export default {
         },       
 
         backprof() {
-            router.push('/profile');
+            router.push('/chats');
         },
 
         shouldShowUsername(index) {

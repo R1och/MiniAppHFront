@@ -5,20 +5,10 @@
             <h2>Профиль</h2>
             <div class="namestylo"><p>Пользователь:</p> <p><strong>{{ user.name }}</strong></p></div>
             <div class="work"><p ><strong>Работает</strong></p></div>
-            <hr>
             <div class="namestylo"><p>Роль:</p> <p><strong>Разработчик</strong></p></div>
-            <hr>
-            <form @submit.prevent="timedeal"><!--чё сюда писать?-->
-            <label for="nametime">Время работы:</label>
-            <input class="timemanage" type="text" v-model="name" required /><!--типа так?-->
-          <button type="submit">подтвердить</button>
-        </form>
-            <p>Время работы: {{ nametime }}</p>
-            <hr>
             <p>ID пользователя: <strong>{{ user.id }}</strong></p>
-            <hr>
             <form @submit.prevent="chat">
-            <button type="submit">Чаты</button>
+            <button class="button1" type="submit">Чаты</button>
             </form>
         </div>
     </div>
@@ -28,44 +18,48 @@
 <script>
 
 import router from "@/router";
-
+import { auth, database} from "@/firebase1"; // Импортируйте auth и database из firebase1.js
+import { ref, get } from "firebase/database";
 export default {
     name: 'ProfileView',      
     data() {
         return {
             user: {
-                id: '',
                 name: '',
-
+                id: '', // ID пользователя
             },
-            nametime: ''
         }
 
-    },
-
-    async mounted() {
-        await this.fetchProfile()
     },
     methods: {
-        async fetchProfile() {
-            try {
-                const tg_user = window.Telegram.WebApp.initDataUnsafe?.user
-                const response = await fetch('https://fluffy-lamp-4jjp57rwwp64fjppx-8000.app.github.dev/api/main/${tg_user.id}')
-                const data = await response.json()
-                this.user.id = tg_user.id
-                this.user.name = tg_user.first_name
-            } 
-            catch (error) {
-                console.log(error)
+        chat() {
+             router.push("/chats");
+        },
+
+        fetchUserData() {
+            const user = auth.currentUser;
+            if (user) {
+                const userRef = ref(database, `Users/${user.uid}`);
+                get(userRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        this.user.name = snapshot.val().name;
+                        this.user.id = user.uid; // Получаем ID пользователя
+                    } else {
+                        console.error("Данные пользователя не найдены в базе данных.");
+                    }
+                }).catch((error) => {
+                    console.error("Ошибка получения данных пользователя:", error);
+                });
+                console.log("EMAIL пользователя:", this.user.name);
+                console.log("ID пользователя:", this.user.id);
+            } else {
+                console.error("Пользователь не авторизован.");
             }
         },
-        chat() {
-             router.push("/messages")
-        },
-        timedeal(){
-            this.nametime;
-        }
-    }
+    },
+    mounted() {
+        this.fetchUserData(); 
+    },
 
 }
 </script>
@@ -79,33 +73,46 @@ export default {
   height: 100vh; /* Занимает всю высоту экрана */
   align-items: center;
   padding: 16px;
-  background-color: #1e1e1e;
+  background-color: #1954CC;
 }
 .namestylo{
     text-align: center;
 }
 .work{
-    background-color: #1e1e1e; /* Оранжевый цвет для кнопки */
-    color: #ff7f00;
+    background-color: #ffffff; /* Оранжевый цвет для кнопки */
+    color: #0045cf;
     border: none;
     border-radius: 4px;
     text-align: center;
     font-weight: bold; /* Сделать текст жирным */
 }
-.timemanage{
-    background-color: #1e1e1e;
-    color: #FFFFFF;
-}
 .profile-info {
-  background-color: #3b3b3bec;/* фон #ffffffcc */
+    align-items: center;
+    background: linear-gradient(#c6d9ff, #6195ff);/* фон #ffffffcc */
   backdrop-filter: blur(8px);
   padding: 16px;
   border-radius: 8px;
-  text-align: left;
+  text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-top: 16px;
   width: 100%;
   max-width: 320px;
-  color: #FFFFFF;
+  color: #0038a2;
+}
+.button1 {
+
+width: 100%;
+padding: 0.75rem;
+background-color: #0038a2; /* НЕ Оранжевый цвет кнопки */
+color: #fff;
+border: none;
+font-size: 1rem;
+cursor: pointer;
+transition: background-color 0.3s;
+border-radius: 15px;
+}
+
+.button1:hover {
+background-color: #002d81; /* Более темный НЕ оранжевый при наведении */
 }
 </style>
