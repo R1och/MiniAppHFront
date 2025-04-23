@@ -26,6 +26,13 @@
                 required 
                 class="input-field"
             />
+            <input 
+                type="text" 
+                v-model="adminKey" 
+                placeholder="Введите ключ администратора" 
+                required 
+                class="input-field"
+            />
             <form @submit.prevent="register">
                 <button class="button1" type="submit">Зарегистрироваться</button>
             </form>
@@ -45,12 +52,13 @@ export default {
             email: '',
             password: '',
             name: '',
+            adminKey: '',
         };
     },
     methods: {
         register() {
             if (this.email && this.password && this.name) {
-                signUp(this.email, this.password, this.name)
+                signUp(this.email, this.password, this.name, this.adminKey)
                     .then(() => {
                         console.log("Пользователь зарегистрирован");
                         router.push("/login"); // Перенаправление на страницу входа после успешной регистрации
@@ -66,6 +74,7 @@ export default {
             this.name = '';
             this.email = '';
             this.password = '';
+            this.adminKey = '';
         },
         back(){
             router.push("/");

@@ -4,8 +4,8 @@
         <div class="profile-info">
             <h2>Профиль</h2>
             <div class="namestylo"><p>Пользователь:</p> <p><strong>{{ user.name }}</strong></p></div>
-            <div class="work"><p ><strong>Работает</strong></p></div>
-            <div class="namestylo"><p>Роль:</p> <p><strong>Разработчик</strong></p></div>
+            <div class="work"><p ><strong>В разработке</strong></p></div>
+            <div class="namestylo"><p>Роль:</p> <p><strong>В разработке</strong></p></div>
             <p>ID пользователя: <strong>{{ user.id }}</strong></p>
             <form @submit.prevent="chat">
             <button class="button1" type="submit">Чаты</button>

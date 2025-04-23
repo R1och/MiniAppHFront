@@ -2,7 +2,7 @@
       import { initializeApp } from "firebase/app";
       import { getAnalytics } from "firebase/analytics";
       import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
-      import { getDatabase, push, ref, set, onValue, get } from "firebase/database";
+      import { getDatabase, push, ref, set, onValue, get, update } from "firebase/database";
       // TODO: Add SDKs for Firebase products that you want to use
       // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,7 +23,7 @@
       export const auth = getAuth(app)
       export const database = getDatabase(app);
 
-      export async function signUp(email, password, name) {
+      export async function signUp(email, password, name, adminKey) {
 
           try {
               const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -32,6 +32,7 @@
               await set(userRef, {
                   name: name,
                   email: email,
+                  adminKey: adminKey,
               });
 
               console.log("Пользователь зарегистрирован:", user.uid);
@@ -83,8 +84,31 @@
 
 
       export const writeMessage = async(message, chatNameMessage) => {
-          const messageRef = ref(database, 'Chats/' + chatNameMessage + '/Messages'); // Определяем путь с сообщениями
-          await push(messageRef, message); // Добавляем новое сообщение
+          const messageRef = ref(database, 'Chats/' + chatNameMessage + '/Messages');
+          const chatRef = ref(database, 'Chats/' + chatNameMessage);
+          const formatDate = (date) => {
+              const options = {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+              };
+              return new Date(date).toLocaleString('ru-RU', options);
+          };
+
+          try {
+              const newMessageRef = push(messageRef);
+              await set(newMessageRef, message); // Добавляем новое сообщение
+
+              await update(chatRef, {
+                  lastMessage: message.name,
+                  time: formatDate(new Date()),
+              }); // Обновляем информацию о чате (если нужно)
+          } catch (error) {
+              console.error("Ошибка при записи сообщения:", error);
+          }
+
       };
 
       export const listenForMessages = (callback, chatNameMessages) => {

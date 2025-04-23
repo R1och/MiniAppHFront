@@ -17,7 +17,7 @@ const routes = [{
         component: ProfileView,
     },
     {
-        path: '/profile',
+        path: '/profile/:chatId',
         name: 'MessageView',
         component: MessageView,
     },
